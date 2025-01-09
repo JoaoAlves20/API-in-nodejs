@@ -6,4 +6,9 @@ export const router = [
         endpoint: '/users',
         handler: UserController.findAll,
     },
+    {
+        method: 'GET',
+        endpoint: '/users/:id',
+        handler: UserController.findById,
+    },
 ];
