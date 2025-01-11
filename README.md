@@ -4,7 +4,15 @@
 
 ## 🗺️ Sobre o projeto
 
-Este projeto está sendo desenvolvido para melhorar os conhecimentos em NodeJS puro, sem Express ou qualquer outra lib. Não terá um banco de dados vinculado, apenas users já criados na pasta "mocks", o que facilitará em alguns aspectos a criação de API, usando API Rest. Atualmente foi implementado o método GET para ser usado no endpoint /users, só lembrando que implementei uma Query Params para ser usado, que seria o "order", sendo que quando for colocado no link o endpoint /users?order=desc aparecerá os usuários em ordem descrescente, além de conseguir procurar users pelo id.
+Este projeto foi desenvolvido para melhorar os conhecimentos em NodeJS puro, sem usar Express. Não terá um banco de dados vinculado, apenas users já criados na pasta "mocks", o que facilitará em alguns aspectos a criação de API, usando API Rest (GET, POST, PUT, DELETE). Está implementado toda a regra de negócio para listar os users, ver um user específico (procurando pelo ID), criação de user, atualização de user e deleção de user.
+
+## Endpoints
+
+- List Users (GET): /users
+- Find User (GET): /users/:id
+- Create User (POST): /users/:id
+- Update User (PUT): /users/:id
+- Delete User (DELETE): /user/:id
 
 ## ⚒️ Tecnologias
 
