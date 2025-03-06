@@ -1,75 +1,76 @@
-import { users } from "../mocks/users.js";
+import UserService from "../services/UserService";
 
-let listUsers = users;
-
-export const UserController = {
-    findAll: (request, response) => {
-        const { order } = request.query;
+class UserController {
+    async findAll(request, response) {
+        try {
+            const { order } = request.query;
         
-        const sortedusers = listUsers.sort((a, b) => {
-            if (order === 'desc') {
-                return a.id < b.id ? 1 : -1;
+            const users = await UserService(order);
+
+            response.send(200, users);
+        } catch (err) {
+            response.send(500, { error: err.message })
+        }
+    }
+
+    async findById(request, response) {
+        try {
+            const { id } = request.params;
+    
+            const user = await UserService.findById(id);
+            
+            if (!user) {
+                return response.send(400, { error: "User not found" });
+            };
+    
+            response.send(200, user);
+        } catch (err) {
+            response.send(500, { error: err.message })
+        }
+    }
+
+    async createUser(request, response) {
+        try {
+            const { body } = request;
+            
+            const newUser = await UserService(body);
+            
+            response.send(200, newUser);
+        } catch (err) {
+            response.send(500, { error: err.message })
+        }
+    }
+
+    async updateUser(request, response) {
+        try {
+            const { id } = request.params;
+            const { firstName, lastName } = request.body;
+
+            const userExists = await UserService.findById(id);
+
+            if (!userExists) {
+                return response.send(400, { error: "User not found" });
             };
 
-            return a.id > b.id ? 1 : -1;
-        })
+            const user = await UserService.update(id, firstName, lastName)
 
-        response.send(200, sortedusers);
-    },
-    findById: (request, response) => {
-        const { id } = request.params;
+            response.send(200, user);
+        } catch (err) {
+            response.send(500, { error: err.message })
+        }
+    }
 
-        const findId = listUsers.find((user) => user.id === id)
-        
-        if (!findId) {
-            return response.send(400, { error: "User not found" });
-        };
+    async deleteUser(request, response) {
+        try {
+            const { id } = request.params;
 
-        response.send(200, findId);
-    },
-    createUser: (request, response) => {
-        const { body } = request;
-        
-        const lastUserId = listUsers[listUsers.length - 1].id;
-        const newUser = {
-            id: lastUserId + 1,
-            firstName: body.firstName,
-            lastName: body.lastName
-        };
-        listUsers.push(newUser)
-        response.send(200, newUser);
-    },
-    updateUser: (request, response) => {
-        let { id } = request.params;
-        const { firstName, lastName } = request.body;
-
-        id = Number(id);
-
-        const userExists = listUsers.find((user) => user.id === id);
-
-        if (!userExists) {
-            return response.send(400, { error: "User not found" });
-        };
-
-        listUsers = listUsers.map((user) => {
-            if (user.id === id) {
-                return {
-                    ...user,
-                    firstName,
-                    lastName
-                };
-            };
-
-            return user;
-        });
-
-        response.send(200, { id, firstName, lastName });
-    },
-    deleteUser: (request, response) => {
-        let { id } = request.params;
-        id = Number(id);
-
-        listUsers = listUsers.filter((user) => user.id !== id);
-        response.send(200, { deleted: true });
-    },
+            await UserService.delete(id);
+            
+            response.send(200, { deleted: true });
+        } catch (err) {
+            response.send(500, { error: err.message })
+        }
+    }
 };
+
+export default new UserController();

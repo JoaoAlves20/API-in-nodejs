@@ -1,8 +1,8 @@
-import http from 'http';
-import { URL } from 'url';
+import http from "http";
+import { URL } from "url";
 
-import { router } from './routes.js';
-import { bodyParser } from './helpers/bodyParser.js';
+import { router } from "./routes.js";
+import { bodyParser } from "./helpers/bodyParser.js";
 
 const server = http.createServer((request, response) => {
     const parsedUrl = new URL(`http://localhost:3000${request.url}`);
@@ -26,7 +26,7 @@ const server = http.createServer((request, response) => {
         request.query = Object.fromEntries(parsedUrl.searchParams);
         request.params = { id }
         response.send = (statusCode, body) => {
-            response.writeHead(statusCode, { 'content-type': 'application/json' });
+            response.writeHead(statusCode, { "content-type": "application/json" });
             response.end(JSON.stringify(body));
         };
 
@@ -36,9 +36,9 @@ const server = http.createServer((request, response) => {
             route.handler(request, response);
         };
     } else {
-        response.writeHead(404, { 'content-type': 'text/html' });
+        response.writeHead(404, { "content-type": "text/html" });
         response.end(`Cannot ${request.method} ${pathname}`);
     };
 });
 
-server.listen(3000, () => console.log('Server runner in http://localhost:3000'));
+server.listen(3000, () => console.log("Server runner in http://localhost:3000"));
